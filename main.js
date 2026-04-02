@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, session } = require('electron');
 const path = require('path');
 
 let win;
@@ -15,24 +15,35 @@ function createWindow() {
     skipTaskbar: true,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
-
-  // 让窗口不响应鼠标穿透（但我们自己处理拖拽）
   win.setIgnoreMouseEvents(false);
 }
 
-// 拖拽：渲染进程发来鼠标偏移量，主进程移动窗口
+// 拖拽
 ipcMain.on('window-drag', (event, { dx, dy }) => {
   if (!win) return;
   const [x, y] = win.getPosition();
   win.setPosition(x + dx, y + dy);
 });
 
-app.whenReady().then(createWindow);
+app.commandLine.appendSwitch('enable-speech-dispatcher');
+
+app.whenReady().then(() => {
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'media') {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   app.quit();
