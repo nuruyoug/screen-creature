@@ -169,7 +169,7 @@ function render(time) {
 
   // --- 外膜（第一版参数：freq 3,5,7 amp 5,3,1.5 speed 1）---
   const ng = nameGlow;
-  drawBlob(cx, cy, 50 + ex * 5, t,
+  drawBlob(cx, cy, 45 + ex * 7, t,
     { freq1: 3, freq2: 5, freq3: 7, amp1: 5, amp2: 3, amp3: 1.5, speed: 1 },
     ex);
 
@@ -190,9 +190,9 @@ function render(time) {
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  // --- 细胞质（第一版参数：freq 4,6,8 amp 3,1.5,1 speed 0.8 → 和外膜错位）---
-  drawBlob(cx + 1, cy + 1, 38 + ex * 3, t,
-    { freq1: 4, freq2: 6, freq3: 8, amp1: 3, amp2: 1.5, amp3: 1, speed: 0.8 },
+  // --- 细胞质（第一版颜色：和外膜有明显色差）---
+  drawBlob(cx, cy, 34 + ex * 4, t,
+    { freq1: 4, freq2: 6, freq3: 8, amp1: 2, amp2: 1, amp3: 0.7, speed: 0.8 },
     ex * 0.5);
 
   const cytoGrad = ctx.createRadialGradient(cx - 5, cy - 5, 5, cx, cy, 42);
@@ -205,8 +205,8 @@ function render(time) {
   const nucleusX = cx + Math.sin(t * 0.006) * 4 + 3;
   const nucleusY = cy + Math.cos(t * 0.008) * 3 + 2;
 
-  // 核（第一版参数：freq 4,7,3 amp 1.5,1,0.8 speed 1.3）
-  drawBlob(nucleusX, nucleusY, 14, t,
+  // 核（第一版：径向渐变，不规则形状）
+  drawBlob(nucleusX, nucleusY, 12, t,
     { freq1: 4, freq2: 7, freq3: 3, amp1: 1.5, amp2: 1, amp3: 0.8, speed: 1.3 },
     0);
 
